@@ -10,12 +10,24 @@ import {
   TouchableOpacity
 } from "react-native";
 
+import { Firebase } from "../api/config.js";
+
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
     title: "Add"
   };
 
   state = { date: new Date() };
+
+  handleAddItem = () => {
+    Firebase.database()
+      .ref("users/" + "joel")
+      .set({
+        desc: this.state.desc,
+        price: this.state.price,
+        date: this.state.date.toLocaleDateString()
+      });
+  };
 
   render() {
     return (
@@ -65,9 +77,7 @@ export default class LinksScreen extends React.Component {
 
         <View style={styles.tabBarStickyBottom}>
           <TouchableOpacity
-            onPress={() => {
-              alert(JSON.stringify(this.state));
-            }}
+            onPress={this.handleAddItem}
             style={{ fontWeight: "bold" }}
           >
             <Text>Add</Text>
