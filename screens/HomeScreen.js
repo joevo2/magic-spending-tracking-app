@@ -7,6 +7,7 @@ import {
   Platform,
   Button
 } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 
 class Row extends React.Component {
   render() {
@@ -40,8 +41,11 @@ export default class HomeScreen extends React.Component {
   };
 
   getSum = data => {
-    return data.reduce((accumulator, currrentItem) => accumulator + currrentItem.price, 0)
-  }
+    return data.reduce(
+      (accumulator, currrentItem) => accumulator + currrentItem.price,
+      0
+    );
+  };
 
   render() {
     const date = new Date();
@@ -57,16 +61,13 @@ export default class HomeScreen extends React.Component {
               <Text>{date.toLocaleDateString()}</Text>
             </View>
 
-            {data.map((item, index) => (
-              <Row
-                key={index}
-                desc={item.desc}
-                price={item.price}
-                onPress={test => {
-                  alert(test);
-                }}
-              />
-            ))}
+            <FlatList
+              data={data}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <Row desc={item.desc} price={item.price} />
+              )}
+            />
           </View>
         </ScrollView>
 
