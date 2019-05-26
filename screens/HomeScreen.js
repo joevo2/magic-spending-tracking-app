@@ -5,9 +5,11 @@ import {
   ScrollView,
   Text,
   Platform,
-  Button
+  Button,
+  FlatList
 } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+
+import { Firebase } from "../api/config.js";
 
 class Row extends React.Component {
   render() {
@@ -16,13 +18,6 @@ class Row extends React.Component {
       <View style={styles.cardRow}>
         <Text>{desc}</Text>
         <Text>RM {price}</Text>
-
-        {/* <Button
-          title="Do something"
-          onPress={() => {
-            onPress(desc);
-          }}
-        /> */}
       </View>
     );
   }
@@ -34,7 +29,18 @@ export default class HomeScreen extends React.Component {
     title: "Spending App"
   };
 
-  state = {};
+  constructor(props) {
+    super(props)
+    this.state = { items: [{ key: '1'}] }
+    const items = Firebase.database().ref('users/' + 'joel');
+    items.on('value', (snapshot) => {
+      const data = snapshot.val()
+      const convertedItems = Object.values(data)
+      // to convert key into string for React native flat list to render items key
+      convertedItems.map((item, index) => item.key = index.toString())
+      this.setState({ items: convertedItems })
+    });
+  }
 
   setData = data => {
     this.setState({ data });
@@ -62,7 +68,7 @@ export default class HomeScreen extends React.Component {
             </View>
 
             <FlatList
-              data={data}
+              data={this.state.items}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
                 <Row desc={item.desc} price={item.price} />
