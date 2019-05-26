@@ -5,7 +5,8 @@ import {
   ScrollView,
   Text,
   Platform,
-  Button
+  Button,
+  WebView
 } from "react-native";
 
 class Row extends React.Component {
@@ -40,8 +41,11 @@ export default class HomeScreen extends React.Component {
   };
 
   getSum = data => {
-    return data.reduce((accumulator, currrentItem) => accumulator + currrentItem.price, 0)
-  }
+    return data.reduce(
+      (accumulator, currrentItem) => accumulator + currrentItem.price,
+      0
+    );
+  };
 
   render() {
     const date = new Date();
@@ -52,6 +56,10 @@ export default class HomeScreen extends React.Component {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
         >
+          <WebView
+            source={{ uri: "https://github.com/facebook/react-native" }}
+            style={{ marginTop: 20, height: 500 }}
+          />
           <View style={styles.card}>
             <View style={styles.cardDate}>
               <Text>{date.toLocaleDateString()}</Text>
