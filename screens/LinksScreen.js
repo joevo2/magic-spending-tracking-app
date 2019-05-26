@@ -22,9 +22,9 @@ export default class LinksScreen extends React.Component {
   handleAddItem = () => {
     Firebase.database()
       .ref("users/" + "joel")
-      .set({
-        desc: this.state.desc,
-        price: this.state.price,
+      .push({
+        desc: this.state.desc || '',
+        price: this.state.price || 0,
         date: this.state.date.toLocaleDateString()
       });
   };
