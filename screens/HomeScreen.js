@@ -1,5 +1,31 @@
 import React from "react";
-import { View, StyleSheet, ScrollView, Text, Platform } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  Platform,
+  Button
+} from "react-native";
+
+class Row extends React.Component {
+  render() {
+    const { desc, price, onPress } = this.props;
+    return (
+      <View style={styles.cardRow}>
+        <Text>{desc}</Text>
+        <Text>RM {price}</Text>
+
+        {/* <Button
+          title="Do something"
+          onPress={() => {
+            onPress(desc);
+          }}
+        /> */}
+      </View>
+    );
+  }
+}
 
 export default class HomeScreen extends React.Component {
   // React navigation
@@ -7,17 +33,43 @@ export default class HomeScreen extends React.Component {
     title: "Spending App"
   };
 
+  state = {};
+
+  setData = data => {
+    this.setState({ data });
+  };
+
+  getSum = data => {
+    return data.reduce((accumulator, currrentItem) => accumulator + currrentItem.price, 0)
+  }
+
   render() {
+    const date = new Date();
+    const data = [{ desc: "food", price: 1 }, { desc: "food", price: 1 }];
     return (
       <View style={styles.container}>
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
         >
-          <Text style={{ fontSize: 30, color: "red", fontWeight: "bold" }}>
-            Hello World
-          </Text>
+          <View style={styles.card}>
+            <View style={styles.cardDate}>
+              <Text>{date.toLocaleDateString()}</Text>
+            </View>
+
+            {data.map((item, index) => (
+              <Row
+                key={index}
+                desc={item.desc}
+                price={item.price}
+                onPress={test => {
+                  alert(test);
+                }}
+              />
+            ))}
+          </View>
         </ScrollView>
+
         <View style={styles.tabBarInfoContainer}>
           <Text
             style={{
@@ -33,7 +85,7 @@ export default class HomeScreen extends React.Component {
               backgroundColor: "blue"
             }}
           >
-            RM 10
+            RM {this.getSum(data)}
           </Text>
         </View>
       </View>
@@ -43,12 +95,12 @@ export default class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "grey"
+    flex: 1
+    // backgroundColor: "grey"
   },
   contentContainer: {
-    paddingTop: 30,
-    alignItems: "center"
+    // paddingTop: 30,
+    // alignItems: "center"
   },
   tabBarInfoContainer: {
     position: "absolute",
@@ -67,7 +119,7 @@ const styles = StyleSheet.create({
         elevation: 20
       }
     }),
-    
+
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -75,5 +127,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#fbfbfb",
     paddingVertical: 20,
     paddingHorizontal: 10
+  },
+  card: {
+    borderWidth: 0.5,
+    borderColor: "#d6d7da"
+  },
+  cardDate: {
+    padding: 10,
+    borderWidth: 0.5,
+    borderColor: "#d6d7da",
+    backgroundColor: "#f5f5f5"
+  },
+  cardRow: {
+    padding: 10,
+    borderWidth: 0.5,
+    borderColor: "#d6d7da",
+
+    flexDirection: "row",
+    justifyContent: "space-between",
+
+    padding: 10
   }
 });
