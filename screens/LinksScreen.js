@@ -7,23 +7,27 @@ import {
   Platform,
   DatePickerAndroid,
   DatePickerIOS,
-  TouchableOpacity
+  TouchableOpacity,
+  Button,
+  Image
 } from "react-native";
 
 import { Firebase } from "../api/config.js";
+
+import { ImagePicker, Permissions } from "expo";
 
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
     title: "Add"
   };
 
-  state = { date: new Date() };
+  state = { date: new Date(), image: null };
 
   handleAddItem = () => {
     Firebase.database()
-      .ref("users/" + "joel")
+      .ref("users/" + "john")
       .push({
-        desc: this.state.desc || '',
+        desc: this.state.desc || "",
         price: this.state.price || 0,
         date: this.state.date.toLocaleDateString()
       });
@@ -33,7 +37,6 @@ export default class LinksScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.row}>
-          <Text>Price</Text>
           <TextInput
             onChangeText={text => {
               this.setState({ price: text });
@@ -74,6 +77,33 @@ export default class LinksScreen extends React.Component {
             )}
           </View>
         </View>
+
+        <Button
+          title="Pick image"
+          onPress={async () => {
+            const { status } = await Permissions.askAsync(
+              Permissions.CAMERA_ROLL
+            );
+
+            if (status === "granted") {
+              const result = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [4, 3]
+              });
+
+              if (!result.cancelled) {
+                this.setState({ image: result.uri });
+              }
+            }
+          }}
+        />
+
+        {this.state.image && (
+          <Image
+            source={{ uri: this.state.image }}
+            style={{ width: 200, height: 200 }}
+          />
+        )}
 
         <View style={styles.tabBarStickyBottom}>
           <TouchableOpacity
