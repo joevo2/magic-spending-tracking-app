@@ -5,7 +5,7 @@ import {
   ScrollView,
   Text,
   Platform,
-  Button,
+  Image,
   FlatList
 } from "react-native";
 
@@ -13,11 +13,12 @@ import { Firebase } from "../api/config.js";
 
 class Row extends React.Component {
   render() {
-    const { desc, price, onPress } = this.props;
+    const { desc, price, onPress, image } = this.props;
     return (
       <View style={styles.cardRow}>
         <Text>{desc}</Text>
         <Text>RM {price}</Text>
+        <Image style={{ width: 40, height: 40 }} source={{ uri: image }} />
       </View>
     );
   }
@@ -30,15 +31,16 @@ export default class HomeScreen extends React.Component {
   };
 
   constructor(props) {
-    super(props)
-    this.state = { items: [{ key: '1'}] }
-    const items = Firebase.database().ref('users/' + 'joel');
-    items.on('value', (snapshot) => {
-      const data = snapshot.val()
-      const convertedItems = Object.values(data)
+    super(props);
+    this.state = { items: [{ key: "1" }] };
+
+    const items = Firebase.database().ref("users/" + "john");
+    items.on("value", snapshot => {
+      const data = snapshot.val();
+      const convertedItems = Object.values(data);
       // to convert key into string for React native flat list to render items key
-      convertedItems.map((item, index) => item.key = index.toString())
-      this.setState({ items: convertedItems })
+      convertedItems.map((item, index) => (item.key = index.toString()));
+      this.setState({ items: convertedItems });
     });
   }
 
@@ -71,7 +73,11 @@ export default class HomeScreen extends React.Component {
               data={this.state.items}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
-                <Row desc={item.desc} price={item.price} />
+                <Row
+                  desc={item.desc}
+                  price={item.price}
+                  image={item.image}
+                />
               )}
             />
           </View>
