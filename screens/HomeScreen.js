@@ -33,15 +33,29 @@ export default class HomeScreen extends React.Component {
     title: "Spending App"
   };
 
-  state = {};
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  async componentDidMount() {
+    this.setState({
+      weather: await fetch(
+        "https://www.metaweather.com/api/location/search/?query=london"
+      ).then(res => res.json())
+    });
+  }
 
   setData = data => {
     this.setState({ data });
   };
 
   getSum = data => {
-    return data.reduce((accumulator, currrentItem) => accumulator + currrentItem.price, 0)
-  }
+    return data.reduce(
+      (accumulator, currrentItem) => accumulator + currrentItem.price,
+      0
+    );
+  };
 
   render() {
     const date = new Date();
@@ -52,6 +66,7 @@ export default class HomeScreen extends React.Component {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
         >
+          <Text>{JSON.stringify(this.state.weather)}</Text>
           <View style={styles.card}>
             <View style={styles.cardDate}>
               <Text>{date.toLocaleDateString()}</Text>
